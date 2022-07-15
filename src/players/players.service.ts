@@ -22,11 +22,10 @@ export class PlayersService {
     const { email } = createPlayerDto;
     const playerFound = await this.playerModel.findOne({ email }).exec();
     if (playerFound) {
+      this.logger.error(`Player already exists!`);
       throw new BadRequestException(`Player already exists!`);
     }
-
-    const createdPlayer = new this.playerModel(createPlayerDto);
-    return createdPlayer.save();
+    return new this.playerModel(createPlayerDto).save();
   }
 
   async updatePlayer(
@@ -46,6 +45,7 @@ export class PlayersService {
   async findPlayerById(_id: string): Promise<Player> {
     const playerFound = await this.playerModel.findOne({ _id }).exec();
     if (!playerFound) {
+      this.logger.error(`Player with id: ${_id} not found`);
       throw new NotFoundException(`Player with id: ${_id} not found`);
     }
     return playerFound;

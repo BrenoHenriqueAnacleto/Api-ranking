@@ -43,7 +43,6 @@ export class ChallengesService {
     }
 
     createChallengeDto.solicitationDate = new Date();
-    console.log(new Date());
     createChallengeDto.category = categories[0].category;
     createChallengeDto.status = ChallengeStatus.PENDING.toString();
 
