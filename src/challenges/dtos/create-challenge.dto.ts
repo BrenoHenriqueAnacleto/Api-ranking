@@ -6,6 +6,7 @@ import {
   IsNotEmpty,
 } from 'class-validator';
 import { Player } from 'src/players/interfaces/player.interface';
+import { ChallengeStatus } from '../enums/challange-status.enum';
 
 export class CreateChallengeDto {
   @IsNotEmpty()
@@ -20,7 +21,7 @@ export class CreateChallengeDto {
   @ArrayMaxSize(2)
   players: Array<Player>;
 
-  status: string;
+  status: ChallengeStatus.PENDING;
   category: string;
   solicitationDate: Date;
 }

@@ -6,6 +6,7 @@ import { CreateChallengeDto } from './dtos/create-challenge.dto';
 import { Challenge } from './interfaces/challenge.interface';
 import { CategoriesService } from '../categories/categories.service';
 import { ChallengeStatus } from './enums/challange-status.enum';
+import { UpdateChallengeDto } from './dtos/update-challenge.dto';
 
 @Injectable()
 export class ChallengesService {
@@ -44,7 +45,6 @@ export class ChallengesService {
 
     createChallengeDto.solicitationDate = new Date();
     createChallengeDto.category = categories[0].category;
-    createChallengeDto.status = ChallengeStatus.PENDING.toString();
 
     const createdChallenge = new this.challengeModel(createChallengeDto);
     return createdChallenge.save();
@@ -56,5 +56,29 @@ export class ChallengesService {
 
   async fetchChallengesByPlayerId(playerId: string): Promise<Array<Challenge>> {
     return this.challengeModel.find().where('players').in([playerId]);
+  }
+
+  async update(
+    _id: string,
+    updateChallengeDto: UpdateChallengeDto,
+  ): Promise<void> {
+    await this.verifyChallengeExists(_id);
+    await this.challengeModel
+      .findOneAndUpdate({ _id }, { $set: updateChallengeDto })
+      .exec();
+  }
+
+  async delete(_id: string): Promise<any> {
+    await this.verifyChallengeExists(_id);
+    await this.challengeModel
+      .findOneAndUpdate({ _id }, { $set: { status: ChallengeStatus.CANCELED } })
+      .exec();
+  }
+
+  private async verifyChallengeExists(_id: string) {
+    const foundChallenge = await this.challengeModel.findOne({ _id }).exec();
+    if (!foundChallenge) {
+      throw new BadRequestException(`Challenge ${_id} not found`);
+    }
   }
 }
