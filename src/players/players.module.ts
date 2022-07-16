@@ -5,9 +5,11 @@ import { PlayersService } from './players.service';
 import { PlayerSchema } from './interfaces/player.schema';
 
 @Module({
-  imports: [MongooseModule.forFeature([{name: 'Player',schema: PlayerSchema}])],
+  imports: [
+    MongooseModule.forFeature([{ name: 'Player', schema: PlayerSchema }]),
+  ],
   controllers: [PlayersController],
   providers: [PlayersService],
-  exports: [PlayersService]
+  exports: [PlayersService],
 })
 export class PlayersModule {}
